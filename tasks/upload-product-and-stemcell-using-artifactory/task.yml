@@ -16,11 +16,13 @@ params:
   NO_PROXY:
   OM_IP:
   IAAS:
+  ARTIFACTORY_USERNAME:
+  ARTIFACTORY_PASSWORD:
+  FILE_PATH:
 
 inputs:
   - name: pivnet-product
   - name: pcf-pipelines
-  - name: download-package
 
 run:
   path: pcf-pipelines/tasks/upload-product-and-stemcell-using-artifactory/task.sh
