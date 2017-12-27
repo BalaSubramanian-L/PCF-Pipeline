@@ -46,12 +46,9 @@ if [ -n "$STEMCELL_VERSION" ]; then
   if [[ -z "$stemcell" ]]; then
     echo "validating if stemcell $STEMCELL_VERSION matches with version downloaded from artifactory"
 
-
-    #pivnet-cli login --api-token="$PIVNET_API_TOKEN"
-    #pivnet-cli download-product-files -p "$product_slug" -r $STEMCELL_VERSION -g "*${IAAS}*" --accept-eula
-    echo "list dir"
+    curl -u"$ARTIFACTORY_USERNAME":"$ARTIFACTORY_PASSWORD" -O "$FILE_PATH"
     echo `ls`
-    SC_FILE_PATH=`find ./download-package -name *.tgz`
+    SC_FILE_PATH=`find *.tgz`
 
     if [ ! -f "$SC_FILE_PATH" ]; then
       echo "Stemcell file not found!"
