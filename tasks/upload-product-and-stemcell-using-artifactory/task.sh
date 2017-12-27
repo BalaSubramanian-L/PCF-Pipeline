@@ -49,7 +49,8 @@ if [ -n "$STEMCELL_VERSION" ]; then
 
     #pivnet-cli login --api-token="$PIVNET_API_TOKEN"
     #pivnet-cli download-product-files -p "$product_slug" -r $STEMCELL_VERSION -g "*${IAAS}*" --accept-eula
-    `ls ./download-package`
+    echo "list dir"
+    echo `ls`
     SC_FILE_PATH=`find ./download-package -name *.tgz`
 
     if [ ! -f "$SC_FILE_PATH" ]; then
