@@ -47,11 +47,6 @@ if [ -n "$STEMCELL_VERSION" ]; then
    
     SC_FILE_PATH= "$FILE_PATH"
 
-    if [ ! -f "$SC_FILE_PATH" ]; then
-      echo "Stemcell file not found!"
-      exit 1
-    fi
-
     om-linux -t https://$OPSMAN_DOMAIN_OR_IP_ADDRESS \
       --client-id "${OPSMAN_CLIENT_ID}" \
       --client-secret "${OPSMAN_CLIENT_SECRET}" \
@@ -59,6 +54,6 @@ if [ -n "$STEMCELL_VERSION" ]; then
       -p "$OPS_MGR_PWD" \
       -k \
       upload-stemcell \
-       $SC_FILE_PATH
+       -s $SC_FILE_PATH
   fi
 fi
