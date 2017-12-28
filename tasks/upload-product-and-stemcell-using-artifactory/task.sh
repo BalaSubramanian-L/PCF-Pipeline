@@ -44,9 +44,7 @@ if [ -n "$STEMCELL_VERSION" ]; then
   )
 
   if [[ -z "$stemcell" ]]; then
-   
-    SC_FILE_PATH= "$FILE_PATH"
-
+  
     om-linux -t https://$OPSMAN_DOMAIN_OR_IP_ADDRESS \
       --client-id "${OPSMAN_CLIENT_ID}" \
       --client-secret "${OPSMAN_CLIENT_SECRET}" \
@@ -54,6 +52,6 @@ if [ -n "$STEMCELL_VERSION" ]; then
       -p "$OPS_MGR_PWD" \
       -k \
       upload-stemcell \
-       -s $SC_FILE_PATH
+       -s "$FILE_PATH"
   fi
 fi
