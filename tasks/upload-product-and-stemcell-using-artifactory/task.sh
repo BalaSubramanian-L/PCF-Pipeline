@@ -6,6 +6,8 @@ if [[ -n "$NO_PROXY" ]]; then
   echo "$OM_IP $OPSMAN_DOMAIN_OR_IP_ADDRESS" >> /etc/hosts
 fi
 
+cat ./pivnet-product/metadata.json
+
 STEMCELL_VERSION=$(
   cat ./pivnet-product/metadata.json |
   jq --raw-output \
@@ -34,7 +36,7 @@ if [ -n "$STEMCELL_VERSION" ]; then
       --skip-ssl-validation \
       curl --silent --path "/api/v0/diagnostic_report"
   )
-
+  echo $diagnostic_report
   stemcell=$(
     echo $diagnostic_report |
     jq \
