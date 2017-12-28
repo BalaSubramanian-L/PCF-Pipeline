@@ -42,7 +42,8 @@ if [ -n "$STEMCELL_VERSION" ]; then
       --arg glob "$IAAS" \
     '.stemcells[] | select(contains($version) and contains($glob))'
   )
-
+  
+  echo "$stemcell"
   if [[ -z "$stemcell" ]]; then
   
     om-linux -t https://$OPSMAN_DOMAIN_OR_IP_ADDRESS \
