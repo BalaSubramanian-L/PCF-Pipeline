@@ -44,11 +44,8 @@ if [ -n "$STEMCELL_VERSION" ]; then
   )
 
   if [[ -z "$stemcell" ]]; then
-    echo "validating if stemcell $STEMCELL_VERSION matches with version downloaded from artifactory"
-
-    curl -u"$ARTIFACTORY_USERNAME":"$ARTIFACTORY_PASSWORD" -O "$FILE_PATH"
-    echo `ls`
-    SC_FILE_PATH=`find *.tgz`
+   
+    SC_FILE_PATH= "$FILE_PATH"
 
     if [ ! -f "$SC_FILE_PATH" ]; then
       echo "Stemcell file not found!"
