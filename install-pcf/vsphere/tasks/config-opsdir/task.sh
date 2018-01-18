@@ -69,14 +69,6 @@ network_configuration=$(
     --arg infra_dns "$INFRA_NW_DNS" \
     --arg infra_gateway "$INFRA_NW_GATEWAY" \
     --arg infra_availability_zones "$INFRA_NW_AZS" \
-    --argjson services_network_is_service_network $IS_SERVICE_NETWORK \
-    --arg services_network_name "$SERVICES_NETWORK_NAME" \
-    --arg services_vcenter_network "$SERVICES_VCENTER_NETWORK" \
-    --arg services_network_cidr "$SERVICES_NW_CIDR" \
-    --arg services_reserved_ip_ranges "$SERVICES_EXCLUDED_RANGE" \
-    --arg services_dns "$SERVICES_NW_DNS" \
-    --arg services_gateway "$SERVICES_NW_GATEWAY" \
-    --arg services_availability_zones "$SERVICES_NW_AZS" \
     '
     {
       "icmp_checks_enabled": $icmp_checks_enabled,
@@ -92,20 +84,6 @@ network_configuration=$(
               "dns": $infra_dns,
               "gateway": $infra_gateway,
               "availability_zones": ($infra_availability_zones | split(","))
-            }
-          ]
-        },
-        {
-          "name": $services_network_name,
-          "service_network": $services_network_is_service_network,
-          "subnets": [
-            {
-              "iaas_identifier": $services_vcenter_network,
-              "cidr": $services_network_cidr,
-              "reserved_ip_ranges": $services_reserved_ip_ranges,
-              "dns": $services_dns,
-              "gateway": $services_gateway,
-              "availability_zones": ($services_availability_zones | split(","))
             }
           ]
         }
