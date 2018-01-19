@@ -56,7 +56,10 @@ if [ -n "$STEMCELL_VERSION" ]; then
         end
         ' < pivnet-product/metadata.json
     )
-
+    
+    echo "$product_slug"
+    ls
+    
     pivnet-cli login --api-token="$PIVNET_API_TOKEN"
     pivnet-cli download-product-files -p "$product_slug" -r $STEMCELL_VERSION -g "*${IAAS}*" --accept-eula
 
