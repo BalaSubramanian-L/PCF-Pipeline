@@ -139,7 +139,6 @@ cf_properties=$(
     --arg private_key_pem "$pcf_ert_ssl_key" \
     --arg saml_cert_pem "$saml_cert_pem" \
     --arg saml_key_pem "$saml_key_pem" \
-    --arg haproxy_forward_tls "$HAPROXY_FORWARD_TLS" \
     --arg haproxy_backend_ca "$HAPROXY_BACKEND_CA" \
     --arg router_tls_ciphers "$ROUTER_TLS_CIPHERS" \
     --arg haproxy_tls_ciphers "$HAPROXY_TLS_CIPHERS" \
