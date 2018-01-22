@@ -482,8 +482,6 @@ cf_resources=$(
     --arg mysql_nsx_lb_security_group "${MYSQL_NSX_LB_SECURITY_GROUP}" \
     --arg mysql_nsx_lb_port "${MYSQL_NSX_LB_PORT}" \
     '
-    $job_resource_config
-
     |
 
     if $ha_proxy_elb_name != "" then
