@@ -96,283 +96,286 @@ cf_properties=$(
     --arg mysql_backups_scp_cron_schedule "$MYSQL_BACKUPS_SCP_CRON_SCHEDULE" \
     '
     {
-    ".properties.system_blobstore": {
-      "value": "internal"
-    },
-    ".properties.logger_endpoint_port": {
-      "value": $loggregator_endpoint_port
-    },
-    ".properties.route_services": {
-      "value": $route_services
-    },
-    ".properties.route_services.enable.ignore_ssl_cert_verification": {
-      "value": $ignore_ssl_cert
-    },
-    ".properties.security_acknowledgement": {
-      "value": $security_acknowledgement
-    },
-    ".cloud_controller.system_domain": {
-      "value": $system_domain
-    },
-    ".cloud_controller.apps_domain": {
-      "value": $apps_domain
-    },
-    ".cloud_controller.default_quota_memory_limit_mb": {
-      "value": $default_quota_memory_limit_in_mb
-    },
-    ".cloud_controller.default_quota_max_number_services": {
-      "value": $default_quota_max_services_count
-    },
-    ".cloud_controller.allow_app_ssh_access": {
-      "value": $allow_app_ssh_access
-    },
-    ".ha_proxy.static_ips": {
-      "value": $ha_proxy_ips
-    },
-    ".ha_proxy.skip_cert_verify": {
-      "value": $skip_cert_verify
-    },
-    ".router.static_ips": {
-      "value": $router_static_ips
-    },
-    ".router.disable_insecure_cookies": {
-      "value": $disable_insecure_cookies
-    },
-    ".router.request_timeout_in_seconds": {
-      "value": $router_request_timeout_seconds
-    },
-    ".mysql_monitor.recipient_email": {
-      "value": $mysql_monitor_email
-    },
-    ".diego_cell.garden_network_pool": {
-      "value": $garden_network_pool
-    },
-    ".diego_cell.garden_network_mtu": {
-      "value": $garden_network_mtu
-    },
-    ".tcp_router.static_ips": {
-      "value": $tcp_router_static_ips
-    },
-    ".push-apps-manager.company_name": {
-      "value": $company_name
-    },
-    ".diego_brain.static_ips": {
-      "value": $ssh_static_ips
+     ".properties.system_blobstore": {
+       "value": "internal"
+     },
+     ".properties.logger_endpoint_port": {
+       "value": $loggregator_endpoint_port
+     },
+     ".properties.route_services": {
+       "value": $route_services
+     },
+     ".properties.route_services.enable.ignore_ssl_cert_verification": {
+       "value": $ignore_ssl_cert
+     },
+     ".properties.security_acknowledgement": {
+       "value": $security_acknowledgement
+     },
+     ".cloud_controller.system_domain": {
+       "value": $system_domain
+     },
+     ".cloud_controller.apps_domain": {
+       "value": $apps_domain
+     },
+     ".cloud_controller.default_quota_memory_limit_mb": {
+       "value": $default_quota_memory_limit_in_mb
+     },
+     ".cloud_controller.default_quota_max_number_services": {
+       "value": $default_quota_max_services_count
+     },
+     ".cloud_controller.allow_app_ssh_access": {
+       "value": $allow_app_ssh_access
+     },
+     ".ha_proxy.static_ips": {
+       "value": $ha_proxy_ips
+     },
+     ".ha_proxy.skip_cert_verify": {
+       "value": $skip_cert_verify
+     },
+     ".router.static_ips": {
+       "value": $router_static_ips
+     },
+     ".router.disable_insecure_cookies": {
+       "value": $disable_insecure_cookies
+     },
+     ".router.request_timeout_in_seconds": {
+       "value": $router_request_timeout_seconds
+     },
+     ".mysql_monitor.recipient_email": {
+       "value": $mysql_monitor_email
+     },
+     ".diego_cell.garden_network_pool": {
+       "value": $garden_network_pool
+     },
+     ".diego_cell.garden_network_mtu": {
+       "value": $garden_network_mtu
+     },
+     ".tcp_router.static_ips": {
+       "value": $tcp_router_static_ips
+     },
+     ".push-apps-manager.company_name": {
+       "value": $company_name
+     },
+     ".diego_brain.static_ips": {
+       "value": $ssh_static_ips
+     }
     }
-  }
-  +
-  # TCP Routing
-  if $tcp_routing == "enable" then
-   {
-     ".properties.tcp_routing": {
-        "value": "enable"
-      },
-      ".properties.tcp_routing.enable.reservable_ports": {
-        "value": $tcp_routing_ports
+    +
+   
+    # TCP Routing
+   
+    if $tcp_routing == "enable" then
+     {
+       ".properties.tcp_routing": {
+          "value": "enable"
+        },
+        ".properties.tcp_routing.enable.reservable_ports": {
+          "value": $tcp_routing_ports
+        }
       }
-    }
-  else
-    {
-      ".properties.tcp_routing": {
-        "value": "disable"
+    else
+      {
+        ".properties.tcp_routing": {
+          "value": "disable"
+        }
       }
-    }
-  end
-  +
-  # SSL Termination
-  if $ssl_termination == "haproxy" then
+    end
+    +
+    # SSL Termination
+    if $ssl_termination == "haproxy" then
+      {
+        ".properties.networking_point_of_entry": {
+          "value": "haproxy"
+        },
+        ".properties.networking_point_of_entry.haproxy.ssl_rsa_certificate": {
+          "value": {
+            "cert_pem": $cert_pem,
+            "private_key_pem": $private_key_pem
+          }
+        }
+      }
+    elif $ssl_termination == "external_ssl" then
+      {
+        ".properties.networking_point_of_entry": {
+          "value": "external_ssl"
+        },
+        ".properties.networking_point_of_entry.external_ssl.ssl_rsa_certificate": {
+          "value": {
+            "cert_pem": $cert_pem,
+            "private_key_pem": $private_key_pem
+          }
+        }
+      }
+    else
+      {
+        ".properties.networking_point_of_entry": {
+          "value": "external_non_ssl"
+        }
+      }
+    end
+    +
+    # SMTP Configuration
+    if $smtp_address != "" then
+      {
+        ".properties.smtp_from": {
+          "value": $smtp_from
+        },
+        ".properties.smtp_address": {
+          "value": $smtp_address
+        },
+        ".properties.smtp_port": {
+          "value": $smtp_port
+        },
+        ".properties.smtp_credentials": {
+          "value": {
+            "identity": $smtp_user,
+            "password": $smtp_password
+          }
+        },
+        ".properties.smtp_enable_starttls_auto": {
+          "value": true
+        },
+        ".properties.smtp_auth_mechanism": {
+          "value": $smtp_auth_mechanism
+        }
+      }
+    else
+      .
+    end
+    +
+    # Syslog
+    if $syslog_host != "" then
+      {
+        ".doppler.message_drain_buffer_size": {
+          "value": $syslog_drain_buffer_size
+        },
+        ".cloud_controller.security_event_logging_enabled": {
+          "value": $enable_security_event_logging
+        },
+        ".properties.syslog_host": {
+          "value": $syslog_host
+        },
+        ".properties.syslog_port": {
+          "value": $syslog_port
+        },
+        ".properties.syslog_protocol": {
+          "value": $syslog_protocol
+        }
+      }
+    else
+      .
+    end
+    +
+    # Authentication
+    if $authentication_mode == "internal" then
+      {
+        ".properties.uaa": {
+          "value": "internal"
+        }
+      }
+    elif $authentication_mode == "ldap" then
+      {
+        ".properties.uaa": {
+          "value": "ldap"
+        },
+        ".properties.uaa.ldap.url": {
+          "value": $ldap_url
+        },
+        ".properties.uaa.ldap.credentials": {
+          "value": {
+            "identity": $ldap_user,
+            "password": $ldap_password
+          }
+        },
+        ".properties.uaa.ldap.search_base": {
+          "value": $ldap_search_base
+        },
+        ".properties.uaa.ldap.search_filter": {
+          "value": $ldap_search_filter
+        },
+        ".properties.uaa.ldap.group_search_base": {
+          "value": $ldap_group_search_base
+        },
+        ".properties.uaa.ldap.group_search_filter": {
+          "value": $ldap_group_search_filter
+        },
+        ".properties.uaa.ldap.mail_attribute_name": {
+          "value": $ldap_mail_attr_name
+        },
+        ".properties.uaa.ldap.first_name_attribute": {
+          "value": $ldap_first_name_attr
+        },
+        ".properties.uaa.ldap.last_name_attribute": {
+          "value": $ldap_last_name_attr
+        }
+      }
+    else
+      .
+    end
+    +
+    # UAA SAML Credentials
     {
-      ".properties.networking_point_of_entry": {
-        "value": "haproxy"
-      },
-      ".properties.networking_point_of_entry.haproxy.ssl_rsa_certificate": {
-        "value": {
-          "cert_pem": $cert_pem,
-          "private_key_pem": $private_key_pem
+      ".uaa.service_provider_key_credentials": {
+        value: {
+          "cert_pem": $saml_cert_pem,
+          "private_key_pem": $saml_key_pem
         }
       }
     }
-  elif $ssl_termination == "external_ssl" then
-    {
-      ".properties.networking_point_of_entry": {
-        "value": "external_ssl"
-      },
-      ".properties.networking_point_of_entry.external_ssl.ssl_rsa_certificate": {
-        "value": {
-          "cert_pem": $cert_pem,
-          "private_key_pem": $private_key_pem
+    +
+    # MySQL Backups
+    if $mysql_backups == "s3" then
+      {
+        ".properties.mysql_backups": {
+          "value": "s3"
+        },
+        ".properties.mysql_backups.s3.endpoint_url":  {
+          "value": $mysql_backups_s3_endpoint_url
+        },
+        ".properties.mysql_backups.s3.bucket_name":  {
+          "value": $mysql_backups_s3_bucket_name
+        },
+        ".properties.mysql_backups.s3.bucket_path":  {
+          "value": $mysql_backups_s3_bucket_path
+        },
+        ".properties.mysql_backups.s3.access_key_id":  {
+          "value": $mysql_backups_s3_access_key_id
+        },
+        ".properties.mysql_backups.s3.secret_access_key":  {
+          "value": $mysql_backups_s3_secret_access_key
+        },
+        ".properties.mysql_backups.s3.cron_schedule":  {
+          "value": $mysql_backups_s3_cron_schedule
         }
       }
-    }
-  else
-    {
-      ".properties.networking_point_of_entry": {
-        "value": "external_non_ssl"
-      }
-    }
-  end
-  +
-  # SMTP Configuration
-  if $smtp_address != "" then
-    {
-      ".properties.smtp_from": {
-        "value": $smtp_from
-      },
-      ".properties.smtp_address": {
-        "value": $smtp_address
-      },
-      ".properties.smtp_port": {
-        "value": $smtp_port
-      },
-      ".properties.smtp_credentials": {
-        "value": {
-          "identity": $smtp_user,
-          "password": $smtp_password
+    elif $mysql_backups == "scp" then
+      {
+        ".properties.mysql_backups": {
+          "value": "scp"
+        },
+        ".properties.mysql_backups.scp.server": {
+          "value": $mysql_backups_scp_server
+        },
+        ".properties.mysql_backups.scp.port": {
+          "value": $mysql_backups_scp_port
+        },
+        ".properties.mysql_backups.scp.user": {
+          "value": $mysql_backups_scp_user
+        },
+        ".properties.mysql_backups.scp.key": {
+          "value": $mysql_backups_scp_key
+        },
+        ".properties.mysql_backups.scp.destination": {
+          "value": $mysql_backups_scp_destination
+        },
+        ".properties.mysql_backups.scp.cron_schedule" : {
+          "value": $mysql_backups_scp_cron_schedule
         }
-      },
-      ".properties.smtp_enable_starttls_auto": {
-        "value": true
-      },
-      ".properties.smtp_auth_mechanism": {
-        "value": $smtp_auth_mechanism
       }
-    }
-  else
-    .
-  end
-  +
-  # Syslog
-  if $syslog_host != "" then
-    {
-      ".doppler.message_drain_buffer_size": {
-        "value": $syslog_drain_buffer_size
-      },
-      ".cloud_controller.security_event_logging_enabled": {
-        "value": $enable_security_event_logging
-      },
-      ".properties.syslog_host": {
-        "value": $syslog_host
-      },
-      ".properties.syslog_port": {
-        "value": $syslog_port
-      },
-      ".properties.syslog_protocol": {
-        "value": $syslog_protocol
-      }
-    }
-  else
-    .
-  end
-  +
-  # Authentication
-  if $authentication_mode == "internal" then
-    {
-      ".properties.uaa": {
-        "value": "internal"
-      }
-    }
-  elif $authentication_mode == "ldap" then
-    {
-      ".properties.uaa": {
-        "value": "ldap"
-      },
-      ".properties.uaa.ldap.url": {
-        "value": $ldap_url
-      },
-      ".properties.uaa.ldap.credentials": {
-        "value": {
-          "identity": $ldap_user,
-          "password": $ldap_password
-        }
-      },
-      ".properties.uaa.ldap.search_base": {
-        "value": $ldap_search_base
-      },
-      ".properties.uaa.ldap.search_filter": {
-        "value": $ldap_search_filter
-      },
-      ".properties.uaa.ldap.group_search_base": {
-        "value": $ldap_group_search_base
-      },
-      ".properties.uaa.ldap.group_search_filter": {
-        "value": $ldap_group_search_filter
-      },
-      ".properties.uaa.ldap.mail_attribute_name": {
-        "value": $ldap_mail_attr_name
-      },
-      ".properties.uaa.ldap.first_name_attribute": {
-        "value": $ldap_first_name_attr
-      },
-      ".properties.uaa.ldap.last_name_attribute": {
-        "value": $ldap_last_name_attr
-      }
-    }
-  else
-    .
-  end
-  +
-  # UAA SAML Credentials
-  {
-    ".uaa.service_provider_key_credentials": {
-      value: {
-        "cert_pem": $saml_cert_pem,
-        "private_key_pem": $saml_key_pem
-      }
-    }
-  }
-  +
-  # MySQL Backups
-  if $mysql_backups == "s3" then
-    {
-      ".properties.mysql_backups": {
-        "value": "s3"
-      },
-      ".properties.mysql_backups.s3.endpoint_url":  {
-        "value": $mysql_backups_s3_endpoint_url
-      },
-      ".properties.mysql_backups.s3.bucket_name":  {
-        "value": $mysql_backups_s3_bucket_name
-      },
-      ".properties.mysql_backups.s3.bucket_path":  {
-        "value": $mysql_backups_s3_bucket_path
-      },
-      ".properties.mysql_backups.s3.access_key_id":  {
-        "value": $mysql_backups_s3_access_key_id
-      },
-      ".properties.mysql_backups.s3.secret_access_key":  {
-        "value": $mysql_backups_s3_secret_access_key
-      },
-      ".properties.mysql_backups.s3.cron_schedule":  {
-        "value": $mysql_backups_s3_cron_schedule
-      }
-    }
-  elif $mysql_backups == "scp" then
-    {
-      ".properties.mysql_backups": {
-        "value": "scp"
-      },
-      ".properties.mysql_backups.scp.server": {
-        "value": $mysql_backups_scp_server
-      },
-      ".properties.mysql_backups.scp.port": {
-        "value": $mysql_backups_scp_port
-      },
-      ".properties.mysql_backups.scp.user": {
-        "value": $mysql_backups_scp_user
-      },
-      ".properties.mysql_backups.scp.key": {
-        "value": $mysql_backups_scp_key
-      },
-      ".properties.mysql_backups.scp.destination": {
-        "value": $mysql_backups_scp_destination
-      },
-      ".properties.mysql_backups.scp.cron_schedule" : {
-        "value": $mysql_backups_scp_cron_schedule
-      }
-    }
-  else
-    .
-  end
+    else
+      .
+    end
+    '
 )
 
 cf_network=$(
@@ -392,7 +395,6 @@ cf_network=$(
     }
     '
 )
-
 JOB_RESOURCE_CONFIG="{
   \"backup-prepare\": { \"instances\": $BACKUP_PREPARE_INSTANCES },
   \"ccdb\": { \"instances\": $CCDB_INSTANCES },
@@ -416,7 +418,6 @@ JOB_RESOURCE_CONFIG="{
   \"tcp_router\": { \"instances\": $TCP_ROUTER_INSTANCES },
   \"uaa\": { \"instances\": $UAA_INSTANCES }
 }"
-
 if [[ "$IAAS" == "azure" ]]; then
   JOB_RESOURCE_CONFIG=$(echo "$JOB_RESOURCE_CONFIG" | \
     jq --argjson internet_connected $INTERNET_CONNECTED \
@@ -424,7 +425,6 @@ if [[ "$IAAS" == "azure" ]]; then
     jq -s "from_entries"
   )
 fi
-
 cf_resources=$(
   jq -n \
     --arg iaas "$IAAS" \
@@ -453,27 +453,20 @@ cf_resources=$(
     --argjson job_resource_config "${JOB_RESOURCE_CONFIG}" \
     '
     $job_resource_config
-
     |
-
     if $ha_proxy_elb_name != "" then
       .ha_proxy |= . + { "elb_names": [ $ha_proxy_elb_name ] }
     else
       .
     end
-
     |
-
     if $ha_proxy_floating_ips != "" then
       .ha_proxy |= . + { "floating_ips": $ha_proxy_floating_ips }
     else
       .
     end
-
     |
-
     # NSX LBs
-
     if $tcp_router_nsx_lb_edge_name != "" then
       .tcp_router |= . + {
         "nsx_security_groups": [$tcp_router_nsx_security_group],
@@ -489,9 +482,7 @@ cf_resources=$(
     else
       .
     end
-
     |
-
     if $router_nsx_lb_edge_name != "" then
       .router |= . + {
         "nsx_security_groups": [$router_nsx_security_group],
@@ -507,9 +498,7 @@ cf_resources=$(
     else
       .
     end
-
     |
-
     if $diego_brain_nsx_lb_edge_name != "" then
       .diego_brain |= . + {
         "nsx_security_groups": [$diego_brain_nsx_security_group],
@@ -525,11 +514,8 @@ cf_resources=$(
     else
       .
     end
-
     |
-
     # MySQL
-
     if $mysql_nsx_lb_edge_name != "" then
       .mysql |= . + {
         "nsx_security_groups": [$mysql_nsx_security_group],
@@ -547,7 +533,6 @@ cf_resources=$(
     end
     '
 )
-
 om-linux \
   --target https://$OPSMAN_DOMAIN_OR_IP_ADDRESS \
   --client-id "${OPSMAN_CLIENT_ID}" \
