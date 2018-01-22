@@ -418,13 +418,7 @@ JOB_RESOURCE_CONFIG="{
   \"tcp_router\": { \"instances\": $TCP_ROUTER_INSTANCES },
   \"uaa\": { \"instances\": $UAA_INSTANCES }
 }"
-if [[ "$IAAS" == "azure" ]]; then
-  JOB_RESOURCE_CONFIG=$(echo "$JOB_RESOURCE_CONFIG" | \
-    jq --argjson internet_connected $INTERNET_CONNECTED \
-    '. | to_entries[] | {"key": .key, value: (.value + {"internet_connected": $internet_connected}) } ' | \
-    jq -s "from_entries"
-  )
-fi
+
 cf_resources=$(
   jq -n \
     --arg iaas "$IAAS" \
