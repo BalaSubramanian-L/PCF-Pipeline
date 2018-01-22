@@ -79,8 +79,8 @@ cf_properties=$(
     --arg ldap_mail_attr_name "$MAIL_ATTR_NAME" \
     --arg ldap_first_name_attr "$FIRST_NAME_ATTR" \
     --arg ldap_last_name_attr "$LAST_NAME_ATTR" \
-    --arg saml_cert_pem "$saml_cert_pem" \
-    --arg saml_key_pem "$saml_key_pem" \
+    --arg saml_cert_pem "$SAML_CERT_PEM" \
+    --arg saml_key_pem "$SAML_KEY_PEM" \
     --arg mysql_backups "$MYSQL_BACKUPS" \
     --arg mysql_backups_s3_endpoint_url "$MYSQL_BACKUPS_S3_ENDPOINT_URL" \
     --arg mysql_backups_s3_bucket_name "$MYSQL_BACKUPS_S3_BUCKET_NAME" \
