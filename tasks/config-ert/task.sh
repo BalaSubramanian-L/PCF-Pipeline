@@ -34,7 +34,7 @@ cf_network=$(
   echo '{}' |
   jq \
     --arg network_name "$NETWORK_NAME" \
-    --arg other_azs "$DEPLOYMENT_NW_AZS" \
+    --arg other_azs "$INFRA_NW_AZS" \
     --arg singleton_az "$ERT_SINGLETON_JOB_AZ" \
     '
     . +
