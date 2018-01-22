@@ -101,6 +101,8 @@ params:
   LOGGREGATOR_TRAFFICCONTROLLER_INSTANCES:
   SAML_CERT_PEM:
   SAML_KEY_PEM:
+  SAML_SSL_CERT:
+  SAML_SSL_PRIVATE_KEY:
   
 inputs:
   - name: pcf-pipelines
