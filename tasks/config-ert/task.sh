@@ -456,14 +456,6 @@ JOB_RESOURCE_CONFIG="{
   \"uaa\": { \"instances\": $UAA_INSTANCES }
 }"
 
-if [[ "$IAAS" == "azure" ]]; then
-  JOB_RESOURCE_CONFIG=$(echo "$JOB_RESOURCE_CONFIG" | \
-    jq --argjson internet_connected $INTERNET_CONNECTED \
-    '. | to_entries[] | {"key": .key, value: (.value + {"internet_connected": $internet_connected}) } ' | \
-    jq -s "from_entries"
-  )
-fi
-
 cf_resources=$(
   jq -n \
     --arg iaas "$IAAS" \
@@ -489,7 +481,6 @@ cf_resources=$(
     --arg mysql_nsx_lb_pool_name "${MYSQL_NSX_LB_POOL_NAME}" \
     --arg mysql_nsx_lb_security_group "${MYSQL_NSX_LB_SECURITY_GROUP}" \
     --arg mysql_nsx_lb_port "${MYSQL_NSX_LB_PORT}" \
-    --argjson job_resource_config "${JOB_RESOURCE_CONFIG}" \
     '
     $job_resource_config
 
