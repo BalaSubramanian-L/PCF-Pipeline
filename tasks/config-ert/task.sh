@@ -590,6 +590,12 @@ cf_resources=$(
     '
 )
 
+echo "$cf_properties"
+
+echo "$cf_network"
+
+echo "$cf_resources"
+
 om-linux \
   --target https://$OPSMAN_DOMAIN_OR_IP_ADDRESS \
   --client-id "${OPSMAN_CLIENT_ID}" \
