@@ -2,7 +2,7 @@
 
 set -eu
 
-source pcf-pipelines/functions/generate_cert.sh
+source PCF-Pipeline/functions/generate_cert.sh
 
 if [[ -z "$SSL_CERT" ]]; then
   domains=(
