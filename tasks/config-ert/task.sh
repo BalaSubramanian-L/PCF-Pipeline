@@ -482,8 +482,7 @@ cf_resources=$(
     --arg mysql_nsx_lb_security_group "${MYSQL_NSX_LB_SECURITY_GROUP}" \
     --arg mysql_nsx_lb_port "${MYSQL_NSX_LB_PORT}" \
     '
-    |
-
+  
     if $ha_proxy_elb_name != "" then
       .ha_proxy |= . + { "elb_names": [ $ha_proxy_elb_name ] }
     else
