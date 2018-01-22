@@ -55,7 +55,6 @@ cf_properties=$(
     --arg mysql_static_ips "$MYSQL_STATIC_IPS" \
     --arg cert_pem "$SSL_CERT" \
     --arg private_key_pem "$SSL_PRIVATE_KEY" \
-    --arg haproxy_forward_tls "$HAPROXY_FORWARD_TLS" \
     --arg haproxy_backend_ca "$HAPROXY_BACKEND_CA" \
     --arg router_tls_ciphers "$ROUTER_TLS_CIPHERS" \
     --arg haproxy_tls_ciphers "$HAPROXY_TLS_CIPHERS" \
@@ -98,7 +97,6 @@ cf_properties=$(
     --arg mysql_backups_scp_key "$MYSQL_BACKUPS_SCP_KEY" \
     --arg mysql_backups_scp_destination "$MYSQL_BACKUPS_SCP_DESTINATION" \
     --arg mysql_backups_scp_cron_schedule "$MYSQL_BACKUPS_SCP_CRON_SCHEDULE" \
-    --arg container_networking_nw_cidr "$CONTAINER_NETWORKING_NW_CIDR" \
     '
     {
       ".properties.system_blobstore": {
@@ -106,9 +104,6 @@ cf_properties=$(
       },
       ".properties.logger_endpoint_port": {
         "value": $loggregator_endpoint_port
-      },
-      ".properties.container_networking_network_cidr": {
-        "value": $container_networking_nw_cidr
       },
       ".properties.security_acknowledgement": {
         "value": $security_acknowledgement
@@ -195,38 +190,6 @@ cf_properties=$(
     else
       {
         ".properties.tcp_routing": {
-          "value": "disable"
-        }
-      }
-    end
-
-    +
-
-    # SSL Termination
-    {
-      ".properties.networking_poe_ssl_cert": {
-        "value": {
-          "cert_pem": $cert_pem,
-          "private_key_pem": $private_key_pem
-        }
-      }
-    }
-
-    +
-
-    # HAProxy Forward TLS
-    if $haproxy_forward_tls == "enable" then
-      {
-        ".properties.haproxy_forward_tls": {
-          "value": "enable"
-        },
-        ".properties.haproxy_forward_tls.enable.backend_ca": {
-          "value": $haproxy_backend_ca
-        }
-      }
-    else
-      {
-        ".properties.haproxy_forward_tls": {
           "value": "disable"
         }
       }
