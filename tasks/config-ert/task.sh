@@ -69,7 +69,6 @@ cf_properties=$(
     --arg haproxy_forward_tls "$HAPROXY_FORWARD_TLS" \
     --arg haproxy_backend_ca "$HAPROXY_BACKEND_CA" \
     --arg router_tls_ciphers "$ROUTER_TLS_CIPHERS" \
-    --arg routing_tls_termination $ROUTING_TLS_TERMINATION \
     --arg haproxy_tls_ciphers "$HAPROXY_TLS_CIPHERS" \
     --arg disable_http_proxy "$DISABLE_HTTP_PROXY" \
     --arg smtp_from "$SMTP_FROM" \
@@ -262,16 +261,7 @@ cf_properties=$(
 
     +
 
-    {
-      ".properties.routing_tls_termination": {
-        "value": $routing_tls_termination
-      }
-    }
-
-    +
-
-    
-
+   
     # TLS Cipher Suites
     {
       ".properties.gorouter_ssl_ciphers": {
