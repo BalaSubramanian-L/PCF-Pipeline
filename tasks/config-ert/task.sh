@@ -1,4 +1,5 @@
 #!/bin/bash
+
 set -eu
 
 source pcf-pipelines/functions/generate_cert.sh
@@ -26,13 +27,14 @@ saml_certificates=$(generate_cert "${saml_cert_domains[*]}")
 saml_cert_pem=$(echo $saml_certificates | jq --raw-output '.certificate')
 saml_key_pem=$(echo $saml_certificates | jq --raw-output '.key')
 
-source pcf-pipelines/tasks/config-ert/load_cf_properties.sh
+script_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+source $script_dir/load_cf_properties.sh
 
 cf_network=$(
   echo '{}' |
   jq \
     --arg network_name "$NETWORK_NAME" \
-    --arg other_azs "$INFRA_NW_AZS" \
+    --arg other_azs "$DEPLOYMENT_NW_AZS" \
     --arg singleton_az "$ERT_SINGLETON_JOB_AZ" \
     '
     . +
@@ -49,6 +51,7 @@ cf_network=$(
 )
 
 cf_resources=$(
+  set +e
   read -d'%' -r input <<EOF
   {
     "backup-prepare": $BACKUP_PREPARE_INSTANCES,
@@ -76,6 +79,8 @@ cf_resources=$(
   }
   %
 EOF
+  set -e
+
   echo "$input" | jq \
     'map_values(. = {
       "instance_type": {"id":"automatic"},
