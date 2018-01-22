@@ -8,6 +8,7 @@ image_resource:
     repository: czero/rootfs
 
 params:
+  IAAS:
   OPS_MGR_HOST:
   OPS_MGR_USR:
   OPS_MGR_PWD:
@@ -97,6 +98,7 @@ params:
   DOPPLER_INSTANCES:
   LOGGREGATOR_TC_INSTANCES:
   TCP_ROUTER_INSTANCES:
+  LOGGREGATOR_TRAFFICCONTROLLER_INSTANCES:
   
 inputs:
   - name: pcf-pipelines
