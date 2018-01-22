@@ -4,8 +4,6 @@ set -eu
 
 source pcf-pipelines/functions/generate_cert.sh
 
-NETWORKING_POE_SSL_CERTS_JSON="$(ruby -r yaml -r json -e 'puts JSON.dump(YAML.load(ENV["NETWORKING_POE_SSL_CERTS"]))')"
-
 if [[ ${NETWORKING_POE_SSL_CERTS} == "" || ${NETWORKING_POE_SSL_CERTS} == "generate" || ${NETWORKING_POE_SSL_CERTS} == null ]]; then
   domains=(
     "*.${SYSTEM_DOMAIN}"
@@ -17,15 +15,6 @@ if [[ ${NETWORKING_POE_SSL_CERTS} == "" || ${NETWORKING_POE_SSL_CERTS} == "gener
   certificate=$(generate_cert "${domains[*]}")
   pcf_ert_ssl_cert=`echo $certificate | jq '.certificate'`
   pcf_ert_ssl_key=`echo $certificate | jq '.key'`
-  NETWORKING_POE_SSL_CERTS_JSON="[
-    {
-      \"name\": \"Certificate 1\",
-      \"certificate\": {
-        \"cert_pem\": $pcf_ert_ssl_cert,
-        \"private_key_pem\": $pcf_ert_ssl_key
-      }
-    }
-  ]"
 fi
 
 
@@ -40,8 +29,6 @@ if [[ -z "$SAML_SSL_CERT" ]]; then
   SAML_SSL_CERT=$(echo $saml_certificates | jq --raw-output '.certificate')
   SAML_SSL_PRIVATE_KEY=$(echo $saml_certificates | jq --raw-output '.key')
 fi
-
-CREDHUB_ENCRYPTION_KEYS_JSON="$(ruby -r yaml -r json -e 'puts JSON.dump(YAML.load(ENV["CREDHUB_ENCRYPTION_KEYS"]))')"
 
 cf_properties=$(
   jq -n \
@@ -109,8 +96,6 @@ cf_properties=$(
     --arg mysql_backups_scp_key "$MYSQL_BACKUPS_SCP_KEY" \
     --arg mysql_backups_scp_destination "$MYSQL_BACKUPS_SCP_DESTINATION" \
     --arg mysql_backups_scp_cron_schedule "$MYSQL_BACKUPS_SCP_CRON_SCHEDULE" \
-    --argjson credhub_encryption_keys "$CREDHUB_ENCRYPTION_KEYS_JSON" \
-    --argjson networking_poe_ssl_certs "$NETWORKING_POE_SSL_CERTS_JSON" \
     --arg container_networking_nw_cidr "$CONTAINER_NETWORKING_NW_CIDR" \
     '
     {
