@@ -160,15 +160,6 @@ cf_properties=$(
 
     +
 
-    # Credhub encryption keys
-    {
-      ".properties.credhub_key_encryption_passwords": {
-        "value": $credhub_encryption_keys
-      }
-    }
-
-    +
-
     # Route Services
     if $route_services == "enable" then
      {
@@ -206,15 +197,6 @@ cf_properties=$(
         }
       }
     end
-
-    +
-
-    # SSL Termination
-    {
-      ".properties.networking_poe_ssl_certs": {
-        "value": $networking_poe_ssl_certs
-      }
-    }
 
     +
 
