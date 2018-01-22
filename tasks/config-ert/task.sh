@@ -70,7 +70,6 @@ cf_properties=$(
     --arg haproxy_backend_ca "$HAPROXY_BACKEND_CA" \
     --arg router_tls_ciphers "$ROUTER_TLS_CIPHERS" \
     --arg routing_tls_termination $ROUTING_TLS_TERMINATION \
-    --arg routing_custom_ca_certificates "$ROUTING_CUSTOM_CA_CERTIFICATES" \
     --arg haproxy_tls_ciphers "$HAPROXY_TLS_CIPHERS" \
     --arg disable_http_proxy "$DISABLE_HTTP_PROXY" \
     --arg smtp_from "$SMTP_FROM" \
@@ -271,17 +270,7 @@ cf_properties=$(
 
     +
 
-    if $routing_custom_ca_certificates == "" then
-      .
-    else
-      {
-        ".properties.routing_custom_ca_certificates": {
-          "value": $routing_custom_ca_certificates
-        }
-      }
-    end
-
-    +
+    
 
     # TLS Cipher Suites
     {
