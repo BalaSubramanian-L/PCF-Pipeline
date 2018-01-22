@@ -4,6 +4,8 @@ set -eu
 
 source pcf-pipelines/functions/generate_cert.sh
 
+NETWORKING_POE_SSL_CERTS_JSON="$(ruby -r yaml -r json -e 'puts JSON.dump(YAML.load(ENV["NETWORKING_POE_SSL_CERTS"]))')"
+
 if [[ ${NETWORKING_POE_SSL_CERTS} == "" || ${NETWORKING_POE_SSL_CERTS} == "generate" || ${NETWORKING_POE_SSL_CERTS} == null ]]; then
   domains=(
     "*.${SYSTEM_DOMAIN}"
@@ -96,6 +98,7 @@ cf_properties=$(
     --arg mysql_backups_scp_key "$MYSQL_BACKUPS_SCP_KEY" \
     --arg mysql_backups_scp_destination "$MYSQL_BACKUPS_SCP_DESTINATION" \
     --arg mysql_backups_scp_cron_schedule "$MYSQL_BACKUPS_SCP_CRON_SCHEDULE" \
+    --argjson networking_poe_ssl_certs "$NETWORKING_POE_SSL_CERTS_JSON" \
     --arg container_networking_nw_cidr "$CONTAINER_NETWORKING_NW_CIDR" \
     '
     {
