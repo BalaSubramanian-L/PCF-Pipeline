@@ -197,27 +197,7 @@ cf_properties=$(
 
     +
 
-    {
-      ".properties.routing_disable_http": {
-        "value": $disable_http_proxy
-      }
-    }
-
-    +
-
-    # TLS Cipher Suites
-    {
-      ".properties.gorouter_ssl_ciphers": {
-        "value": $router_tls_ciphers
-      },
-      ".properties.haproxy_ssl_ciphers": {
-        "value": $haproxy_tls_ciphers
-      }
-    }
-
-    +
-
-    # SMTP Configuration
+      # SMTP Configuration
     if $smtp_address != "" then
       {
         ".properties.smtp_from": {
