@@ -441,7 +441,6 @@ JOB_RESOURCE_CONFIG="{
   \"cloud_controller\": { \"instances\": $CLOUD_CONTROLLER_INSTANCES },
   \"cloud_controller_worker\": { \"instances\": $CLOUD_CONTROLLER_WORKER_INSTANCES },
   \"consul_server\": { \"instances\": $CONSUL_SERVER_INSTANCES },
-  \"credhub\": { \"instances\": $CREDHUB_INSTANCES },
   \"diego_brain\": { \"instances\": $DIEGO_BRAIN_INSTANCES },
   \"diego_cell\": { \"instances\": $DIEGO_CELL_INSTANCES },
   \"diego_database\": { \"instances\": $DIEGO_DATABASE_INSTANCES },
