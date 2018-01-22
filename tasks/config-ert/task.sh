@@ -408,7 +408,6 @@ cf_resources=$(
     --argjson diego_cell_instances $DIEGO_CELL_INSTANCES \
     --argjson loggregator_tc_instances $LOGGREGATOR_TC_INSTANCES \
     --argjson tcp_router_instances $TCP_ROUTER_INSTANCES \
-    --argjson syslog_adapter_instances $SYSLOG_ADAPTER_INSTANCES \
     --argjson doppler_instances $DOPPLER_INSTANCES \
     --argjson internet_connected $INTERNET_CONNECTED \
     --arg ha_proxy_elb_name "$HA_PROXY_LB_NAME" \
@@ -455,7 +454,6 @@ cf_resources=$(
       "diego_cell": { "instances": $diego_cell_instances, "internet_connected": $internet_connected },
       "loggregator_trafficcontroller": { "instances": $loggregator_tc_instances, "internet_connected": $internet_connected },
       "tcp_router": { "instances": $tcp_router_instances, "internet_connected": $internet_connected },
-      "syslog_adapter": { "instances": $syslog_adapter_instances, "internet_connected": $internet_connected },
       "syslog_scheduler": {"internet_connected": $internet_connected},
       "doppler": { "instances": $doppler_instances, "internet_connected": $internet_connected },
       "smoke-tests": {"internet_connected": $internet_connected},
@@ -491,7 +489,6 @@ cf_resources=$(
       "diego_cell": { "instances": $diego_cell_instances },
       "loggregator_trafficcontroller": { "instances": $loggregator_tc_instances },
       "tcp_router": { "instances": $tcp_router_instances },
-      "syslog_adapter": { "instances": $syslog_adapter_instances },
       "doppler": { "instances": $doppler_instances }
     }
 
