@@ -418,7 +418,7 @@ JOB_RESOURCE_CONFIG="{
   \"tcp_router\": { \"instances\": $TCP_ROUTER_INSTANCES },
   \"uaa\": { \"instances\": $UAA_INSTANCES }
 }"
-
+echo "$JOB_RESOURCE_CONFIG"
 cf_resources=$(
   jq -n \
     --arg iaas "$IAAS" \
