@@ -103,6 +103,7 @@ params:
   SAML_KEY_PEM:
   SAML_SSL_CERT:
   SAML_SSL_PRIVATE_KEY:
+  ETCD_TLS_SERVER_INSTANCES:
   
 inputs:
   - name: pcf-pipelines
