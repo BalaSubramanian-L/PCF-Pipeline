@@ -79,8 +79,8 @@ cf_properties=$(
     --arg ldap_mail_attr_name "$MAIL_ATTR_NAME" \
     --arg ldap_first_name_attr "$FIRST_NAME_ATTR" \
     --arg ldap_last_name_attr "$LAST_NAME_ATTR" \
-    --arg saml_cert_pem "$SAML_CERT_PEM" \
-    --arg saml_key_pem "$SAML_KEY_PEM" \
+    --arg saml_ssl_cert "$SAML_SSL_CERT" \
+    --arg saml_ssl_private_key "$SAML_SSL_PRIVATE_KEY" \
     --arg mysql_backups "$MYSQL_BACKUPS" \
     --arg mysql_backups_s3_endpoint_url "$MYSQL_BACKUPS_S3_ENDPOINT_URL" \
     --arg mysql_backups_s3_bucket_name "$MYSQL_BACKUPS_S3_BUCKET_NAME" \
@@ -317,8 +317,8 @@ cf_properties=$(
     {
       ".uaa.service_provider_key_credentials": {
         value: {
-          "cert_pem": $saml_cert_pem,
-          "private_key_pem": $saml_key_pem
+          "cert_pem": $saml_ssl_cert,
+          "private_key_pem": $saml_ssl_private_key
         }
       }
     }
@@ -418,7 +418,7 @@ JOB_RESOURCE_CONFIG="{
   \"tcp_router\": { \"instances\": $TCP_ROUTER_INSTANCES },
   \"uaa\": { \"instances\": $UAA_INSTANCES }
 }"
-echo "$JOB_RESOURCE_CONFIG"
+
 cf_resources=$(
   jq -n \
     --arg iaas "$IAAS" \
