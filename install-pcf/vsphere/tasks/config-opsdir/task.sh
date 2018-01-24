@@ -31,11 +31,6 @@ az_configuration=$(cat <<-EOF
       "name": "$AZ_2",
       "cluster": "$AZ_2_CLUSTER_NAME",
       "resource_pool": "$AZ_2_RP_NAME"
-    },
-    {
-      "name": "$AZ_3",
-      "cluster": "$AZ_3_CLUSTER_NAME",
-      "resource_pool": "$AZ_3_RP_NAME"
     }
   ]
 }
@@ -60,21 +55,6 @@ network_configuration=$(
     --arg deployment_dns "$DEPLOYMENT_NW_DNS" \
     --arg deployment_gateway "$DEPLOYMENT_NW_GATEWAY" \
     --arg deployment_availability_zones "$DEPLOYMENT_NW_AZS" \
-    --argjson services_network_is_service_network $IS_SERVICE_NETWORK \
-    --arg services_network_name "$SERVICES_NETWORK_NAME" \
-    --arg services_vcenter_network "$SERVICES_VCENTER_NETWORK" \
-    --arg services_network_cidr "$SERVICES_NW_CIDR" \
-    --arg services_reserved_ip_ranges "$SERVICES_EXCLUDED_RANGE" \
-    --arg services_dns "$SERVICES_NW_DNS" \
-    --arg services_gateway "$SERVICES_NW_GATEWAY" \
-    --arg services_availability_zones "$SERVICES_NW_AZS" \
-    --arg dynamic_services_network_name "$DYNAMIC_SERVICES_NETWORK_NAME" \
-    --arg dynamic_services_vcenter_network "$DYNAMIC_SERVICES_VCENTER_NETWORK" \
-    --arg dynamic_services_network_cidr "$DYNAMIC_SERVICES_NW_CIDR" \
-    --arg dynamic_services_reserved_ip_ranges "$DYNAMIC_SERVICES_EXCLUDED_RANGE" \
-    --arg dynamic_services_dns "$DYNAMIC_SERVICES_NW_DNS" \
-    --arg dynamic_services_gateway "$DYNAMIC_SERVICES_NW_GATEWAY" \
-    --arg dynamic_services_availability_zones "$DYNAMIC_SERVICES_NW_AZS" \
     '. +
     {
       "icmp_checks_enabled": $icmp_checks_enabled,
@@ -90,48 +70,6 @@ network_configuration=$(
               "dns": $infra_dns,
               "gateway": $infra_gateway,
               "availability_zones": ($infra_availability_zones | split(","))
-            }
-          ]
-        },
-        {
-          "name": $deployment_network_name,
-          "service_network": false,
-          "subnets": [
-            {
-              "iaas_identifier": $deployment_vcenter_network,
-              "cidr": $deployment_network_cidr,
-              "reserved_ip_ranges": $deployment_reserved_ip_ranges,
-              "dns": $deployment_dns,
-              "gateway": $deployment_gateway,
-              "availability_zones": ($deployment_availability_zones | split(","))
-            }
-          ]
-        },
-        {
-          "name": $services_network_name,
-          "service_network": $services_network_is_service_network,
-          "subnets": [
-            {
-              "iaas_identifier": $services_vcenter_network,
-              "cidr": $services_network_cidr,
-              "reserved_ip_ranges": $services_reserved_ip_ranges,
-              "dns": $services_dns,
-              "gateway": $services_gateway,
-              "availability_zones": ($services_availability_zones | split(","))
-            }
-          ]
-        },
-        {
-          "name": $dynamic_services_network_name,
-          "service_network": true,
-          "subnets": [
-            {
-              "iaas_identifier": $dynamic_services_vcenter_network,
-              "cidr": $dynamic_services_network_cidr,
-              "reserved_ip_ranges": $dynamic_services_reserved_ip_ranges,
-              "dns": $dynamic_services_dns,
-              "gateway": $dynamic_services_gateway,
-              "availability_zones": ($dynamic_services_availability_zones | split(","))
             }
           ]
         }
