@@ -2,21 +2,33 @@
 
 set -eu
 
-iaas_configuration=$(cat <<-EOF
-{
-  "vcenter_host": "$VCENTER_HOST",
-  "vcenter_username": "$VCENTER_USR",
-  "vcenter_password": "$VCENTER_PWD",
-  "datacenter": "$VCENTER_DATA_CENTER",
-  "disk_type": "$VCENTER_DISK_TYPE",
-  "ephemeral_datastores_string": "$EPHEMERAL_STORAGE_NAMES",
-  "persistent_datastores_string": "$PERSISTENT_STORAGE_NAMES",
-  "bosh_vm_folder": "$BOSH_VM_FOLDER",
-  "bosh_template_folder": "$BOSH_TEMPLATE_FOLDER",
-  "bosh_disk_path": "$BOSH_DISK_PATH",
-  "ssl_verification_enabled": false
-}
-EOF
+iaas_configuration=$(
+   jq -n \
+  --arg vcenter_host "$VCENTER_HOST" \
+  --arg vcenter_username "$VCENTER_USR" \
+  --arg vcenter_password "$VCENTER_PWD" \
+  --arg datacenter "$VCENTER_DATA_CENTER" \
+  --arg disk_type "$VCENTER_DISK_TYPE" \
+  --arg ephemeral_datastores_string "$EPHEMERAL_STORAGE_NAMES" \
+  --arg persistent_datastores_string "$PERSISTENT_STORAGE_NAMES" \
+  --arg bosh_vm_folder "$BOSH_VM_FOLDER" \
+  --arg bosh_template_folder "$BOSH_TEMPLATE_FOLDER" \
+  --arg bosh_disk_path "$BOSH_DISK_PATH" \
+  --argjson ssl_verification_enabled false \
+  ' 
+  {
+    "vcenter_host": "$VCENTER_HOST",
+    "vcenter_username": "$VCENTER_USR",
+    "vcenter_password": "$VCENTER_PWD",
+    "datacenter": "$VCENTER_DATA_CENTER",
+    "disk_type": "$VCENTER_DISK_TYPE",
+    "ephemeral_datastores_string": "$EPHEMERAL_STORAGE_NAMES",
+    "persistent_datastores_string": "$PERSISTENT_STORAGE_NAMES",
+    "bosh_vm_folder": "$BOSH_VM_FOLDER",
+    "bosh_template_folder": "$BOSH_TEMPLATE_FOLDER",
+    "bosh_disk_path": "$BOSH_DISK_PATH",
+    "ssl_verification_enabled": false
+  }'
 )
 
 az_configuration=$(cat <<-EOF
@@ -106,8 +118,6 @@ jq \
 )
 
 echo "Configuring IaaS and Director..."
-echo "$iaas_configuration"
-echo "$director_config"
 
 om-linux \
   --target https://$OPS_MGR_HOST \
@@ -118,13 +128,10 @@ om-linux \
   --iaas-configuration "$iaas_configuration" \
   --director-configuration "$director_config"
 
-echo " az_configuration $az_configuration"
 om-linux -t https://$OPS_MGR_HOST -k -u $OPS_MGR_USR -p $OPS_MGR_PWD \
   curl -p "/api/v0/staged/director/availability_zones" \
   -x PUT -d "$az_configuration"
-echo "network_configuration $network_configuration"
-echo "network_assignment $network_assignment"
-echo "security_configuration $security_configuration"
+  
 om-linux \
   --target https://$OPS_MGR_HOST \
   --skip-ssl-validation \
