@@ -2,43 +2,21 @@
 
 set -eu
 
-iaas_configuration=$(
-  jq -n \
-  --arg vcenter_host "$VCENTER_HOST" \
-  --arg vcenter_username "$VCENTER_USR" \
-  --arg vcenter_password "$VCENTER_PWD" \
-  --arg datacenter "$VCENTER_DATA_CENTER" \
-  --arg disk_type "$VCENTER_DISK_TYPE" \
-  --arg ephemeral_datastores_string "$EPHEMERAL_STORAGE_NAMES" \
-  --arg persistent_datastores_string "$PERSISTENT_STORAGE_NAMES" \
-  --arg bosh_vm_folder "$BOSH_VM_FOLDER" \
-  --arg bosh_template_folder "$BOSH_TEMPLATE_FOLDER" \
-  --arg bosh_disk_path "$BOSH_DISK_PATH" \
-  --argjson ssl_verification_enabled false \
-  --argjson nsx_networking_enabled $NSX_NETWORKING_ENABLED \
-  --arg nsx_address "$NSX_ADDRESS" \
-  --arg nsx_username "$NSX_USERNAME" \
-  --arg nsx_password "$NSX_PASSWORD" \
-  --arg nsx_ca_certificate "$NSX_CA_CERTIFICATE" \
-  '
-  {
-    "vcenter_host": $vcenter_host,
-    "vcenter_username": $vcenter_username,
-    "vcenter_password": $vcenter_password,
-    "datacenter": $datacenter,
-    "disk_type": $disk_type,
-    "ephemeral_datastores_string": $ephemeral_datastores_string,
-    "persistent_datastores_string": $persistent_datastores_string,
-    "bosh_vm_folder": $bosh_vm_folder,
-    "bosh_template_folder": $bosh_template_folder,
-    "bosh_disk_path": $bosh_disk_path,
-    "ssl_verification_enabled": $ssl_verification_enabled,
-    "nsx_networking_enabled": $nsx_networking_enabled,
-    "nsx_address": $nsx_address,
-    "nsx_username": $nsx_username,
-    "nsx_password": $nsx_password,
-    "nsx_ca_certificate": $nsx_ca_certificate
-  }'
+iaas_configuration=$(cat <<-EOF
+{
+  "vcenter_host": "$VCENTER_HOST",
+  "vcenter_username": "$VCENTER_USR",
+  "vcenter_password": "$VCENTER_PWD",
+  "datacenter": "$VCENTER_DATA_CENTER",
+  "disk_type": "$VCENTER_DISK_TYPE",
+  "ephemeral_datastores_string": "$EPHEMERAL_STORAGE_NAMES",
+  "persistent_datastores_string": "$PERSISTENT_STORAGE_NAMES",
+  "bosh_vm_folder": "$BOSH_VM_FOLDER",
+  "bosh_template_folder": "$BOSH_TEMPLATE_FOLDER",
+  "bosh_disk_path": "$BOSH_DISK_PATH",
+  "ssl_verification_enabled": false
+}
+EOF
 )
 
 az_configuration=$(cat <<-EOF
@@ -60,7 +38,8 @@ EOF
 )
 
 network_configuration=$(
-  jq -n \
+  echo '{}' |
+  jq \
     --argjson icmp_checks_enabled $ICMP_CHECKS_ENABLED \
     --arg infra_network_name "$INFRA_NETWORK_NAME" \
     --arg infra_vcenter_network "$INFRA_VCENTER_NETWORK" \
@@ -69,7 +48,7 @@ network_configuration=$(
     --arg infra_dns "$INFRA_NW_DNS" \
     --arg infra_gateway "$INFRA_NW_GATEWAY" \
     --arg infra_availability_zones "$INFRA_NW_AZS" \
-    '
+    '. +
     {
       "icmp_checks_enabled": $icmp_checks_enabled,
       "networks": [
@@ -104,9 +83,10 @@ EOF
 )
 
 security_configuration=$(
-  jq -n \
+  echo '{}' |
+  jq \
     --arg trusted_certificates "$TRUSTED_CERTIFICATES" \
-    '
+    '. +
     {
       "trusted_certificates": $trusted_certificates,
       "vm_password_type": "generate"
@@ -114,10 +94,11 @@ security_configuration=$(
 )
 
 network_assignment=$(
-jq -n \
+echo '{}' |
+jq \
   --arg infra_availability_zones "$INFRA_NW_AZS" \
   --arg network "$INFRA_NETWORK_NAME" \
-  '
+  '. +
   {
     "singleton_availability_zone": ($infra_availability_zones | split(",") | .[0]),
     "network": $network
@@ -126,27 +107,23 @@ jq -n \
 
 echo "Configuring IaaS and Director..."
 om-linux \
-  --target https://$OPSMAN_DOMAIN_OR_IP_ADDRESS \
+  --target https://$OPS_MGR_HOST \
   --skip-ssl-validation \
-  --client-id "${OPSMAN_CLIENT_ID}" \
-  --client-secret "${OPSMAN_CLIENT_SECRET}" \
-  --username "$OPS_MGR_USR" \
-  --password "$OPS_MGR_PWD" \
+  --username $OPS_MGR_USR \
+  --password $OPS_MGR_PWD \
   configure-bosh \
   --iaas-configuration "$iaas_configuration" \
   --director-configuration "$director_config"
 
-om-linux -t https://$OPSMAN_DOMAIN_OR_IP_ADDRESS -k -u $OPS_MGR_USR -p $OPS_MGR_PWD \
+om-linux -t https://$OPS_MGR_HOST -k -u $OPS_MGR_USR -p $OPS_MGR_PWD \
   curl -p "/api/v0/staged/director/availability_zones" \
   -x PUT -d "$az_configuration"
 
 om-linux \
-  --target https://$OPSMAN_DOMAIN_OR_IP_ADDRESS \
+  --target https://$OPS_MGR_HOST \
   --skip-ssl-validation \
-  --client-id "${OPSMAN_CLIENT_ID}" \
-  --client-secret "${OPSMAN_CLIENT_SECRET}" \
-  --username "$OPS_MGR_USR" \
-  --password "$OPS_MGR_PWD" \
+  --username $OPS_MGR_USR \
+  --password $OPS_MGR_PWD \
   configure-bosh \
   --networks-configuration "$network_configuration" \
   --network-assignment "$network_assignment" \
