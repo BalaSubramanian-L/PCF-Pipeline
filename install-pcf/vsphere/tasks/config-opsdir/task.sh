@@ -48,13 +48,6 @@ network_configuration=$(
     --arg infra_dns "$INFRA_NW_DNS" \
     --arg infra_gateway "$INFRA_NW_GATEWAY" \
     --arg infra_availability_zones "$INFRA_NW_AZS" \
-    --arg deployment_network_name "$DEPLOYMENT_NETWORK_NAME" \
-    --arg deployment_vcenter_network "$DEPLOYMENT_VCENTER_NETWORK" \
-    --arg deployment_network_cidr "$DEPLOYMENT_NW_CIDR" \
-    --arg deployment_reserved_ip_ranges "$DEPLOYMENT_EXCLUDED_RANGE" \
-    --arg deployment_dns "$DEPLOYMENT_NW_DNS" \
-    --arg deployment_gateway "$DEPLOYMENT_NW_GATEWAY" \
-    --arg deployment_availability_zones "$DEPLOYMENT_NW_AZS" \
     '. +
     {
       "icmp_checks_enabled": $icmp_checks_enabled,
