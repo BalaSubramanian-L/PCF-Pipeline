@@ -15,19 +15,19 @@ iaas_configuration=$(
   --arg bosh_template_folder "$BOSH_TEMPLATE_FOLDER" \
   --arg bosh_disk_path "$BOSH_DISK_PATH" \
   --argjson ssl_verification_enabled false \
-  ' 
+  '
   {
-    "vcenter_host": $VCENTER_HOST,
-    "vcenter_username": $VCENTER_USR,
-    "vcenter_password": $VCENTER_PWD,
-    "datacenter": $VCENTER_DATA_CENTER,
-    "disk_type": $VCENTER_DISK_TYPE,
-    "ephemeral_datastores_string": $EPHEMERAL_STORAGE_NAMES,
-    "persistent_datastores_string": $PERSISTENT_STORAGE_NAMES,
-    "bosh_vm_folder": $BOSH_VM_FOLDER,
-    "bosh_template_folder": $BOSH_TEMPLATE_FOLDER,
-    "bosh_disk_path": $BOSH_DISK_PATH,
-    "ssl_verification_enabled": false
+    "vcenter_host": $vcenter_host,
+    "vcenter_username": $vcenter_username,
+    "vcenter_password": $vcenter_password,
+    "datacenter": $datacenter,
+    "disk_type": $disk_type,
+    "ephemeral_datastores_string": $ephemeral_datastores_string,
+    "persistent_datastores_string": $persistent_datastores_string,
+    "bosh_vm_folder": $bosh_vm_folder,
+    "bosh_template_folder": $bosh_template_folder,
+    "bosh_disk_path": $bosh_disk_path,
+    "ssl_verification_enabled": $ssl_verification_enabled,
   }'
 )
 
