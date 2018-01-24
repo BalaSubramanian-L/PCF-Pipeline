@@ -4,16 +4,14 @@ platform: linux
 
 image_resource:
   type: docker-image
-  source:
-    repository: czero/rootfs
+  source: {repository: czero/cflinuxfs2}
 
 params:
-  IAAS:
   OPS_MGR_HOST:
   OPS_MGR_USR:
   OPS_MGR_PWD:
   ERT_SINGLETON_JOB_AZ:
-  INFRA_NW_AZS:
+  DEPLOYMENT_NW_AZS:
   NETWORK_NAME:
   ENABLE_SECURITY_EVENT_LOGGING:
   SYSLOG_HOST:
@@ -98,10 +96,8 @@ params:
   DOPPLER_INSTANCES:
   LOGGREGATOR_TC_INSTANCES:
   TCP_ROUTER_INSTANCES:
-  LOGGREGATOR_TRAFFICCONTROLLER_INSTANCES:
-  SAML_SSL_CERT:
-  SAML_SSL_PRIVATE_KEY:
-  ETCD_TLS_SERVER_INSTANCES:
+  SYSLOG_ADAPTER_INSTANCES:
+  SYSLOG_SCHEDULER_INSTANCES:
   
 inputs:
   - name: pcf-pipelines
