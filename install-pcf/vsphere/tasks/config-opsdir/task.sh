@@ -118,6 +118,8 @@ jq \
 )
 
 echo "Configuring IaaS and Director..."
+echo "$iaas_configuration"
+echo "$director_config"
 
 om-linux \
   --target https://$OPS_MGR_HOST \
