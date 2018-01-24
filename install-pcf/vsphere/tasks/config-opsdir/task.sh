@@ -3,7 +3,7 @@
 set -eu
 
 iaas_configuration=$(
-   jq -n \
+  jq -n \
   --arg vcenter_host "$VCENTER_HOST" \
   --arg vcenter_username "$VCENTER_USR" \
   --arg vcenter_password "$VCENTER_PWD" \
