@@ -43,6 +43,7 @@ jq \
   --arg default_quota_max_services_count "$DEFAULT_QUOTA_MAX_SERVICES_COUNT" \
   --arg allow_app_ssh_access "$ALLOW_APP_SSH_ACCESS" \
   --arg ha_proxy_ips "$HA_PROXY_IPS" \
+  --arg haproxy_ssl_ciphers "$HAPROXY_SSL_CHIPERS"
   --arg skip_cert_verify "$SKIP_CERT_VERIFY" \
   --arg router_static_ips "$ROUTER_STATIC_IPS" \
   --arg disable_insecure_cookies "$DISABLE_INSECURE_COOKIES" \
@@ -189,6 +190,9 @@ jq \
         "value": {
           "cert_pem": $cert_pem,
           "private_key_pem": $private_key_pem
+        },
+        ".properties.networking_point_of_entry.haproxy.ssl_ciphers": {
+            "value": $haproxy_ssl_ciphers
         }
       }
     }
