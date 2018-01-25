@@ -109,6 +109,9 @@ jq \
     ".properties.route_services.enable.ignore_ssl_cert_verification": {
       "value": $ignore_ssl_cert
     },
+    ".properties.networking_point_of_entry.haproxy.ssl_ciphers": {
+      "value": $haproxy_ssl_ciphers
+    },
     ".properties.security_acknowledgement": {
       "value": $security_acknowledgement
     },
@@ -190,9 +193,6 @@ jq \
         "value": {
           "cert_pem": $cert_pem,
           "private_key_pem": $private_key_pem
-        },
-        ".properties.networking_point_of_entry.haproxy.ssl_ciphers": {
-            "value": $haproxy_ssl_ciphers
         }
       }
     }
